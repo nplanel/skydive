@@ -43,6 +43,37 @@ type Server struct {
 	Port   int
 }
 
+func (s *Server) serveJsIndex(w http.ResponseWriter, r *http.Request) {
+	html, err := statics.Asset("statics/skydive.js")
+	if err != nil {
+		logging.GetLogger().Panic("Unable to find the topology asset")
+	}
+
+	t := template.New("topology template")
+
+	t, err = t.Parse(string(html))
+	if err != nil {
+		panic(err)
+	}
+
+	host, err := os.Hostname()
+	if err != nil {
+		panic(err)
+	}
+
+	var data = &struct {
+		Hostname string
+		Port     int
+	}{
+		Hostname: host,
+		Port:     s.Port,
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	t.Execute(w, data)
+}
+
 func (s *Server) serveIndex(w http.ResponseWriter, r *http.Request) {
 	html, err := statics.Asset("statics/topology.html")
 	if err != nil {
@@ -101,6 +132,7 @@ func (s *Server) TopologyShow(w http.ResponseWriter, r *http.Request) {
 func (s *Server) RegisterStaticEndpoints() {
 
 	// static routes
+	s.Router.HandleFunc("/js/skydive.js", s.serveJsIndex)
 	s.Router.HandleFunc("/static/topology", s.serveIndex)
 }
 

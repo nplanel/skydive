@@ -6,6 +6,7 @@ PROTO_FILES=flow/flow.proto
 	protoc --go_out . ${PROTO_FILES}
 
 .bindata: godep builddep
+	bash -c 'pushd statics/js/ ; gopherjs build skydive.go ; /bin/cp -f skydive.js .. ; popd'
 	go-bindata -o statics/bindata.go -pkg=statics -ignore=bindata.go statics/
 
 all: .proto .bindata

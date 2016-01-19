@@ -24,7 +24,7 @@ package graph
 
 import (
 	"encoding/json"
-	"os"
+	//	"os"
 	"sync"
 
 	"github.com/nu7hatch/gouuid"
@@ -486,11 +486,11 @@ func (g *Graph) AddEventListener(l GraphEventListener) {
 }
 
 func NewGraph(b GraphBackend) (*Graph, error) {
-	h, err := os.Hostname()
-	if err != nil {
-		return nil, err
-	}
-	host = h
+	/*	h, err := os.Hostname()
+		if err != nil {
+			return nil, err
+		}*/
+	host = "fixme from gopherjs : package os can't be used at runtime" //h
 
 	return &Graph{
 		backend: b,
