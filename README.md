@@ -83,6 +83,8 @@ $ skydive_agent -conf etc/skydive.ini
 $ skydive_analyzer -conf etc/skydive.ini
 ```
 
+[User Interface](http://127.0.0.1:8082/static/topology)
+
 ## Contributing
 This project accepts contributions. Just fork the repo and submit a pull request!
 
