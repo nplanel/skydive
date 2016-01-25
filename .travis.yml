@@ -10,5 +10,6 @@ before_install:
     - make genlocalfiles
 
 script:
+    - cat flow/flow.pb.go
     - make install
     - ./coverage.sh --coveralls
