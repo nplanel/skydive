@@ -10,13 +10,13 @@ PROTO_FILES=flow/flow.proto
 
 genlocalfiles: .proto .bindata
 
-all: godep genlocalfiles
+all: godep
 	godep go install -v ./...
 
-install: godep genlocalfiles
+install: godep
 	godep go install -v ./...
 
-build: godep genlocalfiles
+build: godep
 	godep go build -v ./...
 
 godep:
