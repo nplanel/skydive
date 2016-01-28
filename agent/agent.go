@@ -100,14 +100,22 @@ func (a *Agent) Start() {
 		panic(err)
 	}
 
-	pipeline := mappings.NewFlowMappingPipeline([]mappings.FlowEnhancer{gfe})
-	a.SFlowProbe.SetMappingPipeline(pipeline)
+	flowEnhancers := []mappings.FlowEnhancer{gfe}
+	if _, err := config.GetConfig().GetSection("docker"); err == nil {
+		dockerEnhancer, err := mappings.NewDockerMapperFromConfig(a.NsProbe)
+		if err != nil {
+			panic(err)
+		}
+		flowEnhancers = append(flowEnhancers, dockerEnhancer)
+	}
+	pipeline := mappings.NewFlowMappingPipeline(flowEnhancers...)
 
 	// start probes that will update the graph
 	a.NsProbe.Start()
 	a.NlProbe.Start()
 	a.OvsProbe.Start()
 
+	a.SFlowProbe.SetMappingPipeline(pipeline)
 	go a.SFlowProbe.Start()
 
 	if err := a.OvsMon.StartMonitoring(); err != nil {

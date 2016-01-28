@@ -124,7 +124,7 @@ func NewNetNsNetLinkTopoUpdater(g *graph.Graph, n *graph.Node) *NetNsNetLinkTopo
 	}
 }
 
-func (u *NetNSProbe) onNetNsCreated(path string) {
+func (u *NetNSProbe) Register(path string) {
 	name := getNetNSName(path)
 
 	_, ok := u.nsnlProbes[name]
@@ -147,7 +147,7 @@ func (u *NetNSProbe) onNetNsCreated(path string) {
 	u.nsnlProbes[name] = nu
 }
 
-func (u *NetNSProbe) onNetNsDeleted(path string) {
+func (u *NetNSProbe) Unregister(path string) {
 	name := getNetNSName(path)
 
 	logging.GetLogger().Debug("Network Namespace deleted: %s", name)
@@ -174,7 +174,7 @@ func (u *NetNSProbe) initialize() {
 	files, _ := ioutil.ReadDir(runBaseDir)
 	for _, f := range files {
 
-		u.onNetNsCreated(runBaseDir + "/" + f.Name())
+		u.Register(runBaseDir + "/" + f.Name())
 	}
 }
 
@@ -209,10 +209,10 @@ func (u *NetNSProbe) start() {
 		select {
 		case ev := <-watcher.Event:
 			if ev.Mask&inotify.IN_CREATE > 0 {
-				u.onNetNsCreated(ev.Name)
+				u.Register(ev.Name)
 			}
 			if ev.Mask&inotify.IN_DELETE > 0 {
-				u.onNetNsDeleted(ev.Name)
+				u.Unregister(ev.Name)
 			}
 
 		case err := <-watcher.Error:
