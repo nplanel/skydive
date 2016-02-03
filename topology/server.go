@@ -25,12 +25,15 @@ package topology
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"net"
 	"net/http"
 	"os"
-	"strconv"
+	"sync"
 	"text/template"
 
 	"github.com/gorilla/mux"
+	"github.com/hydrogen18/stoppableListener"
 
 	"github.com/redhat-cip/skydive/config"
 	"github.com/redhat-cip/skydive/logging"
@@ -44,6 +47,8 @@ type Server struct {
 	Router *mux.Router
 	Addr   string
 	Port   int
+	sl     *stoppableListener.StoppableListener
+	wg     *sync.WaitGroup
 }
 
 func (s *Server) serveIndex(w http.ResponseWriter, r *http.Request) {
@@ -110,7 +115,27 @@ func (s *Server) RegisterRpcEndpoints() {
 }
 
 func (s *Server) ListenAndServe() {
-	http.ListenAndServe(s.Addr+":"+strconv.FormatInt(int64(s.Port), 10), s.Router)
+	defer s.wg.Done()
+	s.wg.Add(1)
+
+	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", s.Addr, s.Port))
+	if err != nil {
+		panic(err)
+	}
+
+	s.sl, err = stoppableListener.New(listener)
+	if err != nil {
+		panic(err)
+	}
+
+	http.Serve(s.sl, s.Router)
+}
+
+func (s *Server) Stop() {
+	if s.sl != nil {
+		s.sl.Stop()
+		s.wg.Wait()
+	}
 }
 
 func NewServer(g *graph.Graph, a string, p int, router *mux.Router) *Server {
@@ -119,6 +144,7 @@ func NewServer(g *graph.Graph, a string, p int, router *mux.Router) *Server {
 		Router: router,
 		Addr:   a,
 		Port:   p,
+		wg:     &sync.WaitGroup{},
 	}
 }
 

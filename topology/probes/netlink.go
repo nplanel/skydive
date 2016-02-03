@@ -373,11 +373,14 @@ Loop:
 	for {
 		n, err := syscall.EpollWait(epfd, events[:], 1000)
 		if err != nil {
-			logging.GetLogger().Error("Failed to receive from netlink messages: %s", err.Error())
-			continue
+			errno, ok := err.(syscall.Errno)
+			if ok && errno != syscall.EINTR {
+				logging.GetLogger().Error("Failed to receive from netlink messages: %s", err.Error())
+				continue
+			}
 		}
 
-		if n == 0 {
+		if n < 0 {
 			select {
 			case <-u.doneChan:
 				break Loop
