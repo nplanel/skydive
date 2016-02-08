@@ -27,6 +27,11 @@
 			"Rev": "2d1be381ce47537e9e076b2b76dc70933162e4e9"
 		},
 		{
+			"ImportPath": "github.com/docker/go-units",
+			"Comment": "v0.1.0-23-g5d2041e",
+			"Rev": "5d2041e26a699eaca682e2ea41c8f891e1060444"
+		},
+		{
 			"ImportPath": "github.com/go-gremlin/gremlin",
 			"Rev": "e74ebaf231668d5133d3794ac6cb654309da5a8f"
 		},
@@ -54,6 +59,10 @@
 		{
 			"ImportPath": "github.com/hydrogen18/stoppableListener",
 			"Rev": "dadc9ccc400c712e5a316107a5c462863919e579"
+		},
+		{
+			"ImportPath": "github.com/lebauce/dockerclient",
+			"Rev": "c9d1f947999cd8a2e03723c73c39bf8f343bc0b8"
 		},
 		{
 			"ImportPath": "github.com/mattbaird/elastigo/lib",
