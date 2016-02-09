@@ -356,7 +356,7 @@ func (u *NetLinkProbe) start() {
 
 	epfd, e := syscall.EpollCreate1(0)
 	if e != nil {
-		logging.GetLogger().Error("Failed to set the netlink fd as non-blocking: %s", err.Error())
+		logging.GetLogger().Error("Failed to create epoll: %s", err.Error())
 		return
 	}
 	defer syscall.Close(epfd)
@@ -365,7 +365,7 @@ func (u *NetLinkProbe) start() {
 
 	event := syscall.EpollEvent{Events: syscall.EPOLLIN, Fd: int32(fd)}
 	if e = syscall.EpollCtl(epfd, syscall.EPOLL_CTL_ADD, fd, &event); e != nil {
-		logging.GetLogger().Error("Failed to set the netlink fd as non-blocking: %s", err.Error())
+		logging.GetLogger().Error("Failed to control epoll: %s", err.Error())
 		return
 	}
 
@@ -376,7 +376,7 @@ func (u *NetLinkProbe) start() {
 		if err != nil {
 			errno, ok := err.(syscall.Errno)
 			if ok && errno != syscall.EINTR {
-				logging.GetLogger().Error("Failed to receive from netlink messages: %s", err.Error())
+				logging.GetLogger().Error("Failed to receive from events from netlink: %s", err.Error())
 			}
 			continue
 		}
