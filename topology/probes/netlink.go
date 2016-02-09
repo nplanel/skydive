@@ -344,6 +344,7 @@ func (u *NetLinkProbe) start() {
 		return
 	}
 	u.nlSocket = s
+	defer u.nlSocket.Close()
 
 	fd := u.nlSocket.GetFd()
 
@@ -402,8 +403,6 @@ func (u *NetLinkProbe) start() {
 			}
 		}
 	}
-
-	u.nlSocket.Close()
 }
 
 func (u *NetLinkProbe) Start() {
