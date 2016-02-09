@@ -48,7 +48,7 @@ type AsyncClient struct {
 	Path      string
 	messages  chan string
 	quit      chan bool
-	wg        *sync.WaitGroup
+	wg        sync.WaitGroup
 	listeners []EventListener
 	connected bool
 }
@@ -188,7 +188,6 @@ func NewAsyncClient(addr string, port int, path string) *AsyncClient {
 		Path:      path,
 		messages:  make(chan string, 500),
 		quit:      make(chan bool, 1),
-		wg:        &sync.WaitGroup{},
 		connected: false,
 	}
 }

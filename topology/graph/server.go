@@ -41,12 +41,12 @@ const (
 )
 
 type Server struct {
-	Graph     *Graph
-	Alert     *Alert
-	Router    *mux.Router
-	wsServer  *WSServer
-	Host      string
-	waitGroup *sync.WaitGroup
+	Graph    *Graph
+	Alert    *Alert
+	Router   *mux.Router
+	wsServer *WSServer
+	Host     string
+	wg       sync.WaitGroup
 }
 
 type ClientType int
@@ -331,8 +331,8 @@ func (s *Server) serveMessages(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) ListenAndServe() {
-	s.waitGroup.Add(1)
-	defer s.waitGroup.Done()
+	s.wg.Add(1)
+	defer s.wg.Done()
 
 	s.Graph.AddEventListener(s)
 
@@ -341,15 +341,14 @@ func (s *Server) ListenAndServe() {
 
 func (s *Server) Stop() {
 	s.wsServer.quit <- true
-	s.waitGroup.Wait()
+	s.wg.Wait()
 }
 
 func NewServer(g *Graph, a *Alert, router *mux.Router, pongWait time.Duration) *Server {
 	s := &Server{
-		Graph:     g,
-		Alert:     a,
-		Router:    router,
-		waitGroup: &sync.WaitGroup{},
+		Graph:  g,
+		Alert:  a,
+		Router: router,
 		wsServer: &WSServer{
 			Graph:      g,
 			Alert:      a,
