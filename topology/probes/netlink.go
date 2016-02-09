@@ -25,6 +25,7 @@ package probes
 import (
 	"encoding/json"
 	"net"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -45,7 +46,7 @@ type NetLinkProbe struct {
 	Graph             *graph.Graph
 	Root              *graph.Node
 	nlSocket          *nl.NetlinkSocket
-	doneChan          chan struct{}
+	running           atomic.Value
 	indexTointfsQueue map[int64][]*graph.Node
 }
 
@@ -369,24 +370,17 @@ func (u *NetLinkProbe) start() {
 
 	events := make([]syscall.EpollEvent, maxEpollEvents)
 
-Loop:
-	for {
+	for u.running.Load() == true {
 		n, err := syscall.EpollWait(epfd, events[:], 1000)
 		if err != nil {
 			errno, ok := err.(syscall.Errno)
 			if ok && errno != syscall.EINTR {
 				logging.GetLogger().Error("Failed to receive from netlink messages: %s", err.Error())
-				continue
 			}
+			continue
 		}
-
-		if n < 0 {
-			select {
-			case <-u.doneChan:
-				break Loop
-			default:
-				continue
-			}
+		if n == 0 {
+			continue
 		}
 
 		msgs, err := s.Receive()
@@ -421,14 +415,15 @@ func (u *NetLinkProbe) Run() {
 }
 
 func (u *NetLinkProbe) Stop() {
-	u.doneChan <- struct{}{}
+	u.running.Store(false)
 }
 
 func NewNetLinkProbe(g *graph.Graph, n *graph.Node) *NetLinkProbe {
-	return &NetLinkProbe{
+	np := &NetLinkProbe{
 		Graph:             g,
 		Root:              n,
-		doneChan:          make(chan struct{}),
 		indexTointfsQueue: make(map[int64][]*graph.Node),
 	}
+	np.running.Store(true)
+	return np
 }
