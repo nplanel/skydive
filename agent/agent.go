@@ -95,20 +95,21 @@ func (a *Agent) Start() {
 		a.Gclient.Connect()
 	}
 
+	pipeline := mappings.NewFlowMappingPipeline()
+
 	gfe, err := mappings.NewGraphFlowEnhancer(a.Graph)
 	if err != nil {
 		panic(err)
 	}
+	pipeline.AddFlowEnhancer(gfe)
 
-	flowEnhancers := []mappings.FlowEnhancer{gfe}
 	if _, err := config.GetConfig().GetSection("docker"); err == nil {
 		dockerEnhancer, err := mappings.NewDockerMapperFromConfig(a.NsProbe)
 		if err != nil {
 			panic(err)
 		}
-		flowEnhancers = append(flowEnhancers, dockerEnhancer)
+		pipeline.AddFlowEnhancer(dockerEnhancer)
 	}
-	pipeline := mappings.NewFlowMappingPipeline(flowEnhancers...)
 
 	// start probes that will update the graph
 	a.NsProbe.Start()
