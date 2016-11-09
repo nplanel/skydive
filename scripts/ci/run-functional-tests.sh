@@ -42,4 +42,12 @@ esac
 
 set -e
 cd ${GOPATH}/src/github.com/skydive-project/skydive
+exec &> >(tee -a logs)
 make test.functionals GOFLAGS="$GOFLAGS" GORACE="history_size=5" VERBOSE=true TIMEOUT=2m ARGS="$ARGS -etcd.server http://localhost:2379"
+
+errors=$(grep ' > ERRO ' logs | grep -v -e 'wsserver.go:193 http ~.ServeHTTP.func1.serveMessages' -e 'handler.go:184 api  .* Error while watching etcd: context canceled$')
+if [ $(echo "$errors" | wc -l) -gt 0 ]; then
+    echo "======================= Log Errors ======================="
+    echo -e "logs report errors : \n$errors"
+    exit 1
+fi
