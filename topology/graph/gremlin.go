@@ -218,9 +218,15 @@ func (g GremlinBackend) AddEdge(e *Edge) bool {
 		logging.GetLogger().Errorf("Error while adding a new Edge: %s", err.Error())
 		return false
 	}
-
+	// g.V().has("_ID","1cd6f416-b478-58b5-5357-fd8e277adeb2").next()
+	// .addEdge('linked',
+	//     g.V().has("_ID","4e9d69ce-2917-4731-49d6-f04ca2b34be2").next(),
+	//     "_ID","abd2938d-b391-5b82-701e-e596f58d2a2d",
+	//     "_host","skydive-compile.localdomain",
+	//     "RelationType","ownership")
+	//: Script Evaluation Error
 	query := "g.V().has(" + propsParent + ").next()"
-	query += ".addEdge('linked', g.V().has(" + propsChild + ").next(), " + string(properties) + ")"
+	query += ".addEdge(g.V().has(" + propsChild + ").next(), " + "g.V().has(" + string(properties) + ").next(), 'linked')"
 	_, err = g.client.Query(query)
 	if err != nil {
 		logging.GetLogger().Errorf("Error while adding a new Node: %s", err.Error())
