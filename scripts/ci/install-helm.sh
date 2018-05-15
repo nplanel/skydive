@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HELM_INSTALL_DIR=/bin
+export HELM_INSTALL_DIR=/usr/bin
 HELM_GET=https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get
 
 uninstall() {
@@ -9,8 +9,7 @@ uninstall() {
 
 install() {
 	sudo yum install -y socat
-	local runme=/tmp/get_helm.sh
-	curl $HELM_GET | sed -s '/helm version/helm --debug version/' | sh
+	curl $HELM_GET | sed 's/helm version/helm --debug version/' | sh
 }
 
 stop() {
