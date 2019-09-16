@@ -10,6 +10,7 @@ require (
 	github.com/VerizonDigital/vflow v0.0.0-20190111005900-eb30d936249e
 	github.com/abbot/go-http-auth v0.0.0-20160118225252-ca62df34b58d
 	github.com/alecthomas/gometalinter v3.0.0+incompatible // indirect
+	github.com/bennyscetbun/jsongo v0.0.0-20190110163710-9624bef8c57b // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/casbin/casbin v0.0.0-20181031010332-5ff5a6f5e38a
 	github.com/cenk/hub v0.0.0-20160527103212-11382a9960d3 // indirect
@@ -139,3 +140,5 @@ replace github.com/digitalocean/go-libvirt => github.com/lebauce/go-libvirt v0.0
 replace github.com/mailru/easyjson/gen => github.com/safchain/easyjson/gen v0.0.0-20190909090614-d32b6194ad1f
 
 replace github.com/iovisor/gobpf => github.com/lebauce/gobpf v0.0.0-20190909090614-f9e9df81702a
+
+go 1.13

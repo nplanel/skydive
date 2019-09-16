@@ -287,7 +287,9 @@ websocket/structmessage.pb.go: websocket/structmessage.proto
 
 .PHONY: .vppbinapi.clean
 .vppbinapi.clean:
+ifeq ($(WITH_VPP), true)
 	rm -rf topology/probes/vpp/bin_api
+endif
 
 BINDATA_DIRS := \
 	js/*.js \
@@ -577,6 +579,9 @@ endef
 
 .PHONY: vendor
 vendor:
+ifeq ($(WITH_VPP), true)
+	$(MAKE) .vppbinapi
+endif
 ifeq (${GO111MODULE}, on)
 	go mod vendor
 endif
