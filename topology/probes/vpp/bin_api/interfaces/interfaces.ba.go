@@ -7,6 +7,7 @@
  It contains following objects:
 	 25 services
 	  1 alias
+	  3 types
 	 51 messages
 */
 package interfaces
@@ -53,6 +54,70 @@ type Services interface {
 
 // InterfaceIndex represents VPP binary API alias 'interface_index':
 type InterfaceIndex uint32
+
+/* Types */
+
+// VlibCounter represents VPP binary API type 'vlib_counter':
+type VlibCounter struct {
+	Packets uint64
+	Bytes   uint64
+}
+
+func (*VlibCounter) GetTypeName() string {
+	return "vlib_counter"
+}
+func (*VlibCounter) GetCrcString() string {
+	return "ce2325a2"
+}
+
+// VnetCombinedCounter represents VPP binary API type 'vnet_combined_counter':
+type VnetCombinedCounter struct {
+	SwIfIndex          uint32
+	RxPackets          uint64
+	RxBytes            uint64
+	RxUnicastPackets   uint64
+	RxUnicastBytes     uint64
+	RxMulticastPackets uint64
+	RxMulticastBytes   uint64
+	RxBroadcastPackets uint64
+	RxBroadcastBytes   uint64
+	TxPackets          uint64
+	TxBytes            uint64
+	TxUnicastPackets   uint64
+	TxUnicastBytes     uint64
+	TxMulticastPackets uint64
+	TxMulticastBytes   uint64
+	TxBroadcastPackets uint64
+	TxBroadcastBytes   uint64
+}
+
+func (*VnetCombinedCounter) GetTypeName() string {
+	return "vnet_combined_counter"
+}
+func (*VnetCombinedCounter) GetCrcString() string {
+	return "20905ca4"
+}
+
+// VnetSimpleCounter represents VPP binary API type 'vnet_simple_counter':
+type VnetSimpleCounter struct {
+	SwIfIndex  uint32
+	Drop       uint64
+	Punt       uint64
+	RxIP4      uint64
+	RxIP6      uint64
+	RxNoBuffer uint64
+	RxMiss     uint64
+	RxError    uint64
+	TxError    uint64
+	RxMpls     uint64
+}
+
+func (*VnetSimpleCounter) GetTypeName() string {
+	return "vnet_simple_counter"
+}
+func (*VnetSimpleCounter) GetCrcString() string {
+	return "8bd65e2d"
+}
 
 /* Messages */
 
