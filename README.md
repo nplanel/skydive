@@ -3,7 +3,7 @@
 [![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/skydive-project/skydive)
 [![PyPI](https://img.shields.io/pypi/v/skydive-client.svg)](https://pypi.org/project/skydive-client/)
 [![IRC](https://www.irccloud.com/invite-svg?channel=%23skydive-project&amp;hostname=irc.freenode.net&amp;port=6697&amp;ssl=1)](http://webchat.freenode.net/?channels=skydive-project)
-[![Slack Channel](https://img.shields.io/badge/Slack:-%23skydive%252Dproject-blue.svg?style=plastic&logo=slack)](https://skydive-project.slack.com)
+[![Slack Channel](https://img.shields.io/badge/Slack:-%23skydive%%2Dproject-blue.svg?style=plastic&logo=slack)](https://skydive-project.slack.com)
 
 # Skydive
 
